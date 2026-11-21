@@ -1,0 +1,41 @@
+{
+  "name": "recipe-extractor",
+  "version": "1.0.0",
+  "description": "Detect and extract recipes (ingredients, steps, times, nutrition) from any URL",
+  "type": "module",
+  "main": "src/services/recipe/index.js",
+  "bin": {
+    "recipe-extract": "src/cli.js"
+  },
+  "scripts": {
+    "start": "node --env-file-if-exists=.env src/server.js",
+    "dev": "node --env-file-if-exists=.env --watch src/server.js",
+    "extract": "node --env-file-if-exists=.env src/cli.js",
+    "test": "node --test \"tests/**/*.test.js\"",
+    "db:generate": "node --env-file-if-exists=.env node_modules/drizzle-kit/bin.cjs generate",
+    "db:migrate": "node --env-file-if-exists=.env node_modules/drizzle-kit/bin.cjs migrate",
+    "db:push": "node --env-file-if-exists=.env node_modules/drizzle-kit/bin.cjs push",
+    "db:studio": "node --env-file-if-exists=.env node_modules/drizzle-kit/bin.cjs studio",
+    "admin:grant": "node --env-file-if-exists=.env scripts/setRole.js admin",
+    "admin:revoke": "node --env-file-if-exists=.env scripts/setRole.js user",
+    "db:backfill-keys": "node --env-file-if-exists=.env scripts/backfillSourceKeys.js"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.10.0",
+    "@neondatabase/serverless": "^1.2.1",
+    "better-auth": "^1.7.26",
+    "cheerio": "^1.2.0",
+    "drizzle-orm": "^0.45.4",
+    "express": "^5.3.0",
+    "multer": "^2.5.0",
+    "openai": "^7.59.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.17",
+    "drizzle-kit": "^0.31.11"
+  }
+}
