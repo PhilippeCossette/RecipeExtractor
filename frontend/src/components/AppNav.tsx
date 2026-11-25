@@ -98,7 +98,7 @@ export function AppNav() {
   return (
     <nav
       // z-50: above the Backdrop (z-40), so the bar, the "+" and its menu aren't blurred
-      className="absolute bottom-0 z-50 w-full flex-col justify-center"
+      className="fixed bottom-0 z-50 w-full flex-col justify-center"
       aria-label="Main"
     >
       <div className="relative">
