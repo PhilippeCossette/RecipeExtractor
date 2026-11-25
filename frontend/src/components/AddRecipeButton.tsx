@@ -17,13 +17,30 @@ const ICON_ROUGHNESS = 3;
 const MENU_ITEMS: {
   label: string;
   icon: SketchGeometry;
+  /** A doodle pastel from styles.css (bg-doodle-pink | sky | mint | lemon | lilac). */
+  color: string;
   /** Not built yet: shows a "soon" tag. Set to false once the feature exists. */
   soon?: boolean;
 }[] = [
-  { label: "Write it myself", icon: PencilEdit02Icon, soon: true },
-  { label: "Scan a photo", icon: ScanImageIcon, soon: true },
-  { label: "Search recipes", icon: Search01Icon, soon: true },
-  { label: "Paste a link", icon: Link04Icon },
+  {
+    label: "Write it myself",
+    icon: PencilEdit02Icon,
+    color: "bg-doodle-sky",
+    soon: true,
+  },
+  {
+    label: "Scan a photo",
+    icon: ScanImageIcon,
+    color: "bg-doodle-mint",
+    soon: true,
+  },
+  {
+    label: "Search recipes",
+    icon: Search01Icon,
+    color: "bg-doodle-lemon",
+    soon: true,
+  },
+  { label: "Paste a link", icon: Link04Icon, color: "bg-doodle-lilac" },
 ];
 
 const parentVariant = {
@@ -75,19 +92,22 @@ export function AddRecipeButton({
             className="absolute bottom-full left-1/2 mb-4 w-max -translate-x-1/2"
           >
             <ul className="flex flex-col-reverse items-stretch gap-3">
-              {MENU_ITEMS.map(({ label, icon, soon }, index) => {
+              {MENU_ITEMS.map(({ label, icon, soon, color }, index) => {
                 const pair = index % 2 === 0 ? "even" : "odd";
                 return (
                   <motion.li
                     variants={childVariant}
                     whileHover={{ rotate: pair === "even" ? -2 : 2 }}
                     key={label}
-                    className={`${pair === "even" ? "-translate-x-4" : "translate-x-4"} `}
+                    style={{ zIndex: MENU_ITEMS.length - index }}
+                    className={
+                      pair === "even" ? "-translate-x-4" : "translate-x-4"
+                    }
                   >
                     {/* relative: the "soon" tag (absolute) is placed on THIS button's corner */}
                     <button
                       type="button"
-                      className="relative flex w-full items-center gap-3 rounded-sm border-2 border-black bg-pink-300 px-5 py-3 font-semibold shadow-[0px_4px_0px_0px_black] transition-transform hover:scale-[1.03] active:scale-98"
+                      className={`relative flex w-full items-center gap-3 rounded-sm border-2 border-ink ${color} px-5 py-3 font-semibold text-ink shadow-doodle transition-transform hover:scale-[1.03] active:scale-98`}
                     >
                       <SketchIcon
                         icon={icon}
@@ -103,7 +123,7 @@ export function AddRecipeButton({
                           animate={{ opacity: 1, scale: 1 }}
                           exit={{ opacity: 0, scale: 0.95 }}
                           transition={{ duration: 0.2 }}
-                          className="ml-auto absolute rotate-10 -top-2 -right-4 rounded-full border border-black bg-white px-2 text-[10px] uppercase"
+                          className="ml-auto absolute rotate-10 -top-2 -right-4 rounded-full border border-ink bg-paper px-2 text-[10px] uppercase"
                         >
                           soon
                         </motion.span>
@@ -124,7 +144,7 @@ export function AddRecipeButton({
         title="Add a recipe"
         onClick={() => onOpenChange(!open)}
         className={cn(
-          "shadow-[0px_4px_0px_2.5px_black] grid size-20 shrink-0 place-items-center rounded-full bg-blue-700 text-white ring-2 ring-black outline-none transition-all duration-200 hover:bg-blue-500 focus-visible:scale-110 hover:scale-98 active:bg-blue-600 active:scale-90",
+          "shadow-doodle-round grid size-20 shrink-0 place-items-center rounded-full bg-doodle-action text-paper ring-2 ring-ink outline-none transition-all duration-200 hover:bg-doodle-action-hover focus-visible:scale-110 hover:scale-98 active:bg-doodle-action-active active:scale-90",
           className,
         )}
       >

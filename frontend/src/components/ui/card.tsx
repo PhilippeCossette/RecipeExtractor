@@ -3,9 +3,9 @@ import { cn } from "cn"
 
 /**
  * Card variants:
- * - variant="default"  white surface, hairline border, soft shadow
- * - variant="flat"     no shadow, muted background (grouping inside a page)
- * - variant="interactive" lifts on hover — wrap a whole card in a <Link>
+ * - variant="default"  white surface, ink outline, hard doodle shadow
+ * - variant="flat"     no outline or shadow, cream background (grouping inside a page)
+ * - variant="interactive" lifts on hover (the shadow grows) — wrap a whole card in a <Link>
  * Sizes change the inner padding: sm = 16px, default = 20px (24px on ≥640px), lg = 32px.
  */
 function Card({
@@ -23,11 +23,11 @@ function Card({
       data-size={size}
       data-variant={variant}
       className={cn(
-        "group/card flex flex-col gap-(--card-spacing) overflow-hidden rounded-2xl bg-card py-(--card-spacing) text-sm text-card-foreground ring-1 ring-border",
+        "group/card flex flex-col gap-(--card-spacing) overflow-hidden rounded-2xl border-2 border-ink bg-card py-(--card-spacing) text-sm text-card-foreground",
         "[--card-spacing:--spacing(5)] sm:[--card-spacing:--spacing(6)] data-[size=sm]:[--card-spacing:--spacing(4)] data-[size=lg]:[--card-spacing:--spacing(8)]",
-        "data-[variant=default]:shadow-sm",
-        "data-[variant=flat]:bg-muted/60 data-[variant=flat]:ring-transparent",
-        "data-[variant=interactive]:shadow-sm data-[variant=interactive]:transition-[box-shadow,transform] data-[variant=interactive]:duration-200 data-[variant=interactive]:hover:-translate-y-0.5 data-[variant=interactive]:hover:shadow-md data-[variant=interactive]:hover:ring-[color-mix(in_oklch,var(--border),var(--foreground)_10%)]",
+        "data-[variant=default]:shadow-doodle",
+        "data-[variant=flat]:border-transparent data-[variant=flat]:bg-muted",
+        "data-[variant=interactive]:shadow-doodle data-[variant=interactive]:transition-[box-shadow,transform] data-[variant=interactive]:duration-150 data-[variant=interactive]:hover:-translate-y-0.5 data-[variant=interactive]:hover:shadow-doodle-lg data-[variant=interactive]:active:translate-y-0.5 data-[variant=interactive]:active:shadow-doodle-sm",
         "has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 *:[img:first-child]:rounded-t-2xl *:[img:last-child]:rounded-b-2xl",
         className
       )}
@@ -100,7 +100,7 @@ function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="card-footer"
       className={cn(
-        "flex items-center gap-2 rounded-b-2xl border-t bg-muted/50 px-(--card-spacing) py-4",
+        "flex items-center gap-2 rounded-b-2xl border-t-2 border-ink bg-muted px-(--card-spacing) py-4",
         className
       )}
       {...props}
