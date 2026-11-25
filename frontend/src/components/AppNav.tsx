@@ -16,29 +16,29 @@ type NavLink = {
   to: "/home" | "/recipes" | "/lists" | "/profile";
   label: string;
   icon: SketchGeometry;
-  /** Colour of this tab's file folder (any Tailwind bg class). */
+  /** Colour of this tab's file folder: a doodle pastel from styles.css (bg-doodle-pink | sky | mint | lemon | lilac). */
   color: string;
 };
 
 const LINKS: NavLink[] = [
-  { to: "/home", label: "Home", icon: Home01Icon, color: "bg-pink-300" },
+  { to: "/home", label: "Home", icon: Home01Icon, color: "bg-doodle-pink" },
   {
     to: "/recipes",
     label: "Recipes",
     icon: ChefHatIcon,
-    color: "bg-sky-300",
+    color: "bg-doodle-sky",
   },
   {
     to: "/lists",
     label: "Lists",
     icon: LeftToRightListBulletIcon,
-    color: "bg-green-300",
+    color: "bg-doodle-mint",
   },
   {
     to: "/profile",
     label: "Profile",
     icon: UserIcon,
-    color: "bg-violet-300",
+    color: "bg-doodle-lilac",
   },
 ];
 
@@ -102,13 +102,13 @@ export function AppNav() {
       aria-label="Main"
     >
       <div className="relative">
-        <span className="absolute w-full bottom-full left-0 h-3 bg-black blur-[90px] block" />
+        <span className="absolute w-full bottom-full left-0 h-3 bg-ink blur-[90px] block" />
         <div className="relative z-10 py-3 w-full flex ">
           {/* The yellow bar + black top border, with the notch cut out.
               It's its own layer so the mask doesn't also cut off the nametags above the bar. */}
           <div
             aria-hidden
-            className="absolute inset-0 border-t-2 border-black bg-yellow-400"
+            className="absolute inset-0 border-t-2 border-ink bg-doodle-sun"
             style={{ maskImage: NOTCH_MASK, WebkitMaskImage: NOTCH_MASK }}
           />
 
@@ -123,7 +123,7 @@ export function AppNav() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className="absolute inset-0 z-10 bg-black/40"
+                className="absolute inset-0 z-10 bg-ink/40"
               />
             )}
           </AnimatePresence>
@@ -132,7 +132,7 @@ export function AppNav() {
               turned -45deg so the black part is exactly the bottom half. Joins the bar's top border. */}
           <div
             aria-hidden
-            className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-45 rounded-full border-2 border-transparent border-b-black border-l-black"
+            className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-45 rounded-full border-2 border-transparent border-b-ink border-l-ink"
             style={{ width: NOTCH_RADIUS * 2, height: NOTCH_RADIUS * 2 }}
           />
 
@@ -152,7 +152,7 @@ export function AppNav() {
                   )}
 
                   <li
-                    className={` ${active ? ` max-w-40  ring-2 rounded-md   ${color}` : ""} relative px-2 py-2 `}
+                    className={` ${active ? ` max-w-40 ring-2 ring-ink rounded-md ${color}` : ""} relative px-2 py-2 `}
                   >
                     {/* Nametag "window", centred above this tab with CSS (left-1/2 -translate-x-1/2).
                         It sits right on top of the bar (mb-3 = the bar's py-3) and hides
@@ -167,7 +167,7 @@ export function AppNav() {
                         initial={false}
                         animate={{ y: active ? 0 : "110%" }}
                         transition={active ? FOLDER.popUp : FOLDER.goDown}
-                        className={`whitespace-nowrap rounded-t-md border-2 border-b-0 border-black px-2 pt-0.5 text-[11px] font-bold uppercase tracking-wide text-black ${color}`}
+                        className={`whitespace-nowrap rounded-t-md border-2 border-b-0 border-ink px-2 pt-0.5 text-[11px] font-bold uppercase tracking-wide text-ink ${color}`}
                       >
                         {label}
                       </motion.div>

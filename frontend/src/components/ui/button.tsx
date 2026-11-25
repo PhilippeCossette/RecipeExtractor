@@ -3,23 +3,35 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "cn"
 import { Slot } from "radix-ui"
 
+/** Doodle look: ink outline + hard shadow that squashes down when pressed. */
+const doodle =
+  "border-ink shadow-doodle active:not-aria-[haspopup]:translate-y-0.5 active:not-aria-[haspopup]:shadow-doodle-sm"
+
 const buttonVariants = cva(
-  "group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-bold whitespace-nowrap transition-[color,background-color,border-color,box-shadow,transform] duration-150 outline-none select-none focus-visible:ring-3 focus-visible:ring-ring/30 focus-visible:ring-offset-0 active:not-aria-[haspopup]:scale-[0.98] disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "group/button inline-flex shrink-0 items-center justify-center rounded-lg border-2 border-transparent bg-clip-padding text-sm font-bold whitespace-nowrap transition-[color,background-color,border-color,box-shadow,transform] duration-150 outline-none select-none focus-visible:ring-3 focus-visible:ring-ring/30 focus-visible:ring-offset-0 active:not-aria-[haspopup]:scale-[0.98] disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
-        /** Main call to action: solid orange. One per screen ideally. */
-        default:
-          "bg-primary text-primary-foreground shadow-sm shadow-primary/25 hover:bg-primary/90 aria-expanded:bg-primary/90",
-        /** Orange tint: secondary actions that still belong to the brand ("Save", "Add to list"). */
-        soft:
-          "bg-accent text-accent-foreground hover:bg-primary/15 aria-expanded:bg-primary/15 dark:hover:bg-primary/25",
-        /** Neutral filled. */
-        secondary:
+        /** Main call to action: solid doodle blue. One per screen ideally. */
+        default: [
+          doodle,
+          "bg-primary text-primary-foreground hover:bg-doodle-action-hover aria-expanded:bg-doodle-action-hover",
+        ],
+        /** Pastel sky: secondary actions that still belong to the brand ("Save", "Add to list"). */
+        soft: [
+          doodle,
+          "bg-accent text-accent-foreground hover:bg-[color-mix(in_oklch,var(--accent),var(--foreground)_8%)] aria-expanded:bg-[color-mix(in_oklch,var(--accent),var(--foreground)_8%)]",
+        ],
+        /** Cream filled. */
+        secondary: [
+          doodle,
           "bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_6%)] aria-expanded:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_6%)]",
-        /** White with a border: "Cancel", filters, toolbars. */
-        outline:
-          "border-input bg-card text-foreground shadow-xs hover:border-[color-mix(in_oklch,var(--input),var(--foreground)_12%)] hover:bg-muted aria-expanded:bg-muted dark:bg-input/20 dark:hover:bg-input/40",
+        ],
+        /** White with an ink outline: "Cancel", filters, toolbars. */
+        outline: [
+          doodle,
+          "bg-card text-foreground hover:bg-muted aria-expanded:bg-muted dark:bg-input/20 dark:hover:bg-input/40",
+        ],
         /** No background until hover: nav links, icon buttons. */
         ghost:
           "text-foreground hover:bg-muted aria-expanded:bg-muted dark:hover:bg-muted/60",
@@ -27,8 +39,10 @@ const buttonVariants = cva(
         destructive:
           "bg-destructive/10 text-destructive hover:bg-destructive/15 focus-visible:ring-destructive/25 dark:bg-destructive/20 dark:hover:bg-destructive/30",
         /** Solid red: the final "Delete" in a confirm dialog. */
-        "destructive-solid":
-          "bg-destructive text-white shadow-sm shadow-destructive/25 hover:bg-destructive/90 focus-visible:ring-destructive/30",
+        "destructive-solid": [
+          doodle,
+          "bg-destructive text-paper hover:bg-destructive/90 focus-visible:ring-destructive/30",
+        ],
         link: "h-auto px-0 text-primary underline-offset-4 hover:underline",
       },
       size: {
