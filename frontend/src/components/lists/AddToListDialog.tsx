@@ -5,20 +5,30 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Label } from "@/components/ui/label";
 import { createList, addRecipeToList } from "@/api/lists";
 import { useLists, useSetRecipeInList } from "@/hooks/useLists";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { getSavedRecipe } from "@/api/savedRecipes";
 import type { ListRef } from "@/types/list";
 import { ListForm } from "./ListForm";
 
 /**
  * "Add to list" popup for one recipe: a checkbox per list (tick = in the list) and a box to create
  * a new list, which the recipe is put into right away.
+ * `inLists`: the lists the recipe is already in. Leave it out when you don't have them (e.g. in a
+ * list of recipe summaries): they're then loaded when the popup opens.
  */
-export function AddToListDialog({ recipeId, inLists }: { recipeId: string; inLists: ListRef[] }) {
+export function AddToListDialog({ recipeId, inLists }: { recipeId: string; inLists?: ListRef[] }) {
   const [open, setOpen] = useState(false);
   const lists = useLists();
   const setInList = useSetRecipeInList();
   const queryClient = useQueryClient();
-  const inListIds = new Set(inLists.map((l) => l.id));
+  // Same key as useSavedRecipe, so it refreshes after a tick (useSetRecipeInList refreshes "saved-recipes")
+  const recipe = useQuery({
+    queryKey: ["saved-recipes", recipeId],
+    queryFn: () => getSavedRecipe(recipeId),
+    enabled: open && !inLists,
+  });
+  const currentLists = inLists ?? recipe.data?.lists;
+  const inListIds = new Set((currentLists ?? []).map((l) => l.id));
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -33,7 +43,7 @@ export function AddToListDialog({ recipeId, inLists }: { recipeId: string; inLis
           <DialogDescription>Tick the lists this recipe belongs in.</DialogDescription>
         </DialogHeader>
 
-        {lists.isPending ? <p className="text-muted-foreground text-sm">Loading...</p> : null}
+        {lists.isPending || !currentLists ? <p className="text-muted-foreground text-sm">Loading...</p> : null}
         {lists.data?.length === 0 ? <p className="text-muted-foreground text-sm">No lists yet. Create one below.</p> : null}
         <ul className="flex flex-col gap-3">
           {lists.data?.map((list) => {
@@ -44,7 +54,7 @@ export function AddToListDialog({ recipeId, inLists }: { recipeId: string; inLis
                 <Checkbox
                   id={id}
                   checked={inListIds.has(list.id)}
-                  disabled={busy}
+                  disabled={busy || !currentLists}
                   onCheckedChange={(checked) => setInList.mutate({ listId: list.id, recipeId, inList: checked === true })}
                 />
                 <Label htmlFor={id} className="font-normal">
