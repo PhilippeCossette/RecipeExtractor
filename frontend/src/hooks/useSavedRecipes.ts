@@ -3,7 +3,7 @@ import { deleteSavedRecipe, getSavedRecipe, listSavedRecipes } from "@/api/saved
 
 const SAVED_RECIPES_KEY = ["saved-recipes"] as const;
 
-/** The signed-in user's saved recipes (dashboard). */
+/** The signed-in user's saved recipes (/recipes page). */
 export function useSavedRecipes() {
   return useQuery({ queryKey: SAVED_RECIPES_KEY, queryFn: listSavedRecipes });
 }
@@ -13,7 +13,7 @@ export function useSavedRecipe(id: string) {
   return useQuery({ queryKey: [...SAVED_RECIPES_KEY, id], queryFn: () => getSavedRecipe(id) });
 }
 
-/** Delete a saved recipe, then refresh the dashboard list. */
+/** Delete a saved recipe, then refresh the recipes list. */
 export function useDeleteRecipe() {
   const queryClient = useQueryClient();
   return useMutation({

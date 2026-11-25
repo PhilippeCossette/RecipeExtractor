@@ -1,10 +1,10 @@
-import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
+import { Outlet, createFileRoute, redirect, useLocation } from "@tanstack/react-router";
+import { motion, useReducedMotion } from "motion/react";
 import { AppNav } from "@/components/AppNav";
-import { isAdmin } from "@/lib/authClient";
 import { getSession } from "@/lib/sessionQuery";
 
 /**
- * Layout for every page that needs a signed-in user (/home, /dashboard, /profile, /recipes/:id).
+ * Layout for every page that needs a signed-in user (/home, /recipes, /recipes/:id, /lists, /profile).
  * The "_" prefix means it adds no segment to the URL. Signed-out visitors go to /auth.
  */
 export const Route = createFileRoute("/_authed")({
@@ -17,13 +17,32 @@ export const Route = createFileRoute("/_authed")({
   component: AuthedLayout,
 });
 
+/** Page transition settings: tweak these to change the feel. */
+const PAGE_TRANSITION = {
+  /** How far (px) the new page slides up from. */
+  offsetY: 12,
+  /** Length of the fade/slide in seconds. */
+  duration: 0.25,
+};
+
 function AuthedLayout() {
-  const { session } = Route.useRouteContext();
+  // Only the path, so changing ?search params doesn't replay the animation.
+  const pathname = useLocation({ select: (location) => location.pathname });
+  const reduceMotion = useReducedMotion();
+
   return (
     <div className="min-h-svh">
-      <AppNav showAdmin={isAdmin(session)} />
-      <main className="mx-auto w-full max-w-3xl p-4">
-        <Outlet />
+      <AppNav />
+      <main className="container-page pt-6 pb-28 sm:pt-10">
+        {/* The key changes on every page, so the new page fades and slides in. */}
+        <motion.div
+          key={pathname}
+          initial={{ opacity: 0, y: reduceMotion ? 0 : PAGE_TRANSITION.offsetY }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: PAGE_TRANSITION.duration, ease: "easeOut" }}
+        >
+          <Outlet />
+        </motion.div>
       </main>
     </div>
   );

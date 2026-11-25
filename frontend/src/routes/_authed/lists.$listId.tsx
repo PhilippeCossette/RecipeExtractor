@@ -70,7 +70,7 @@ function ListPage() {
           {l.recipes.length === 0 ? (
             <p className="text-muted-foreground text-sm">
               No recipes in this list yet. Open a recipe and use "Add to list".{" "}
-              <Link to="/dashboard" className="underline">
+              <Link to="/recipes" className="underline">
                 Your recipes
               </Link>
             </p>

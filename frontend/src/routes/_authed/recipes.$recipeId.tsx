@@ -23,7 +23,7 @@ function SavedRecipePage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <Link to="/dashboard" className="text-muted-foreground text-sm hover:underline">
+      <Link to="/recipes" className="text-muted-foreground text-sm hover:underline">
         ← Saved recipes
       </Link>
       {already ? (

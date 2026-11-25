@@ -3,12 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useDeleteRecipe, useSavedRecipes } from "@/hooks/useSavedRecipes";
 
-export const Route = createFileRoute("/_authed/dashboard")({
-  component: DashboardPage,
+export const Route = createFileRoute("/_authed/recipes/")({
+  component: RecipesPage,
 });
 
 /** The signed-in user's saved recipes. */
-function DashboardPage() {
+function RecipesPage() {
   const recipes = useSavedRecipes();
   const remove = useDeleteRecipe();
 
