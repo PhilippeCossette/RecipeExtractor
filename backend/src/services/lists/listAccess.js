@@ -2,13 +2,8 @@ import { eq } from "drizzle-orm";
 import { getDb, schema } from "../../db/index.js";
 
 /**
- * THE place that decides who can see or change a list. Every list route goes through here.
- *
- * Today: only the owner can view or edit.
- * Sharing later plugs in here, e.g.:
- *   - visibility "link" + the right shareId  -> anyone can view (read-only)
- *   - a list_member table (user, role)       -> invited people can view or edit
- * The rest of the code just asks for "view" or "edit" and doesn't need to change.
+ * The only place that decides who can view or edit a list (today: the owner only).
+ * Sharing would plug in here; callers just ask for "view" or "edit".
  *
  * @param {{ ownerId: string, visibility: string }} list
  * @param {string | null} userId

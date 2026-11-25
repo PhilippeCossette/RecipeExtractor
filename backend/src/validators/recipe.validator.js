@@ -3,10 +3,7 @@ import { z } from "zod";
 const text = (max) => z.string().trim().max(max);
 const optionalText = (max) => text(max).nullish();
 
-/**
- * A recipe as /extract, /tiktok or /video returns it (found: true). Only the fields the app relies on are checked;
- * other fields (nutrition, rating, keywords...) are kept as they are.
- */
+/** A found recipe as the extract routes return it. Only the fields the app relies on are checked; the rest is kept. */
 export const RecipeSchema = z.looseObject({
   found: z.literal(true, { error: "Only found recipes can be saved" }),
   title: optionalText(300),

@@ -3,10 +3,7 @@ import { motion, useReducedMotion } from "motion/react";
 import { AppNav } from "@/components/AppNav";
 import { getSession } from "@/lib/sessionQuery";
 
-/**
- * Layout for every page that needs a signed-in user (/home, /recipes, /recipes/:id, /lists, /profile).
- * The "_" prefix means it adds no segment to the URL. Signed-out visitors go to /auth.
- */
+/** Layout for signed-in pages ("_" adds no URL segment). Signed-out visitors go to /auth. */
 export const Route = createFileRoute("/_authed")({
   ssr: false, // the session cookie is checked in the browser
   beforeLoad: async ({ context }) => {

@@ -27,7 +27,7 @@ async function normalizeLink(link) {
 async function lookUpVideo(link) {
   const info = { url: null, username: null, videoId: null, caption: null, author: null, thumbnail: null, videoUrl: null, subtitles: null, durationSeconds: null, warnings: [] };
 
-  const parsed = await normalizeLink(link); // throws NOT_TIKTOK
+  const parsed = await normalizeLink(link);
   Object.assign(info, { url: parsed.url, username: parsed.username, videoId: parsed.videoId });
 
   if (config.scrapeCreators.enabled) {

@@ -13,8 +13,7 @@ export const user = pgTable("user", {
   image: text("image"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
-  // "user" or "admin". Declared as an additional field in services/auth/auth.js; users can't set it themselves.
-  // Make someone admin with: npm run admin:grant -- someone@example.com
+  // "user" or "admin". Users can't set it (services/auth/auth.js); use npm run admin:grant.
   role: text("role").notNull().default("user"),
 });
 

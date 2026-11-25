@@ -34,10 +34,9 @@ const SOURCES: Record<RecipeSource, { label: string; icon: SketchGeometry; color
 };
 
 /**
- * "Paste a link" as a doodle card that slides up from the bottom (shadcn Drawer).
- * Paste any link (or share text with a link in it): it shows what it detected (TikTok, Instagram,
- * YouTube or a website), then "Get recipe" shows each step in the same card and opens the saved
- * recipe when it's done. Drag the card down (or tap outside) to close it; that also cancels.
+ * "Paste a link" card that slides up from the bottom (shadcn Drawer).
+ * Shows the detected link type, then each extraction step, then opens the saved recipe.
+ * Closing it (drag down or tap outside) cancels the request.
  */
 export function PasteLinkDrawer({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
   const extract = useExtractRecipe();
@@ -96,7 +95,7 @@ function LinkForm({ onSubmit }: { onSubmit: (url: string) => void }) {
     onSubmit: ({ value }) => onSubmit(normalizeUrlInput(value.url) ?? value.url.trim()),
   });
 
-  /** Fill the box from the clipboard. Some browsers ask first, or don't allow it: then nothing happens. */
+  /** Fill the box from the clipboard (does nothing if the browser refuses). */
   const pasteFromClipboard = async () => {
     try {
       const text = await navigator.clipboard.readText();

@@ -4,10 +4,8 @@ import { user } from "./auth.schema.js";
 import { recipe } from "./recipes.schema.js";
 
 /**
- * A user's recipe list ("Asian", "Quick"...). Built so sharing can be added later without reshaping data:
- *   - visibility: "private" today. Later e.g. "link" (anyone with the share link can view) or "public".
- *   - shareId:    empty today. Later a random id for the share link (/shared/<shareId>), replaceable to revoke.
- * Who may view or edit a list is decided in one place: services/lists/listAccess.js.
+ * A user's recipe list ("Asian", "Quick"...). `visibility` and `shareId` are reserved for sharing
+ * (always "private" / empty today). Access rules live in services/lists/listAccess.js.
  */
 export const recipeList = pgTable(
   "recipe_list",
@@ -40,7 +38,7 @@ export const recipeListItem = pgTable(
     recipeId: uuid("recipe_id")
       .notNull()
       .references(() => recipe.id, { onDelete: "cascade" }),
-    // Who added it: always the owner today; with shared editing later, the collaborator.
+    // Always the owner today; kept for shared editing.
     addedBy: text("added_by").references(() => user.id, { onDelete: "set null" }),
     addedAt: timestamp("added_at").notNull().defaultNow(),
   },

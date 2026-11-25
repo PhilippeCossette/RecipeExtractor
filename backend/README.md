@@ -1,6 +1,6 @@
 # Recipe Extractor API (Node.js + Express)
 
-Give it a URL → it tells you if there's a recipe and returns ingredients (raw + parsed), steps, times, servings, nutrition, rating and image as JSON.
+Give it a URL → it tells you if there's a recipe and returns ingredients (raw + parsed), steps, times, servings, nutrition, rating and image as JSON. Part of [RecipeExtractor](../README.md); the web app is in [`../frontend`](../frontend/README.md).
 
 Requires Node 22+.
 
@@ -16,14 +16,17 @@ npm test             # run the test suite
 
 | Endpoint | What it does |
 |---|---|
-| `GET /extract?url=<recipe url>` | Extract a recipe |
+| `POST /recipe { url }` | Any link: sent to the right extractor by its host (see [One route for any link](#one-route-for-any-link-post-recipe--url-)) |
+| `POST /recipe/stream { url }` | Same, with live progress (used by the frontend) |
+| `GET /extract?url=<recipe url>` | Extract a recipe from a website |
 | `POST /extract` with `{ "url": "..." }` | Same, URL in the body |
 | `POST /tiktok` with `{ "url": "..." }` (caption optional) | Recipe from a TikTok link: caption, AI, then the video's speech (see below) |
 | `GET /tiktok?url=<tiktok link>` | Same, link only |
+| `POST /instagram`, `POST /youtube` with `{ "url": "..." }` | Recipe from an Instagram reel or a YouTube Short (see below) |
 | `POST /video` (multipart) with `video`, optional `caption`, `url` | Recipe from any uploaded short video (Reels, Shorts...) |
 | `POST /ingredients/parse` with `{ "lines": ["2 cups milk", ...] }` | Parse ingredient lines only |
 | `GET /health` | `{ ok: true }` |
-| `GET /` | Lists the endpoints |
+| `GET /` | Lists every endpoint and which features are on |
 
 From your app:
 
@@ -153,7 +156,7 @@ Users sign up with email + password (Better Auth) and save recipes to a Neon Pos
 ### Set up Neon (once)
 
 1. Create a free project at https://neon.tech, then **Connect** > copy the connection string.
-2. Paste it in `.env` as `DATABASE_URL=postgresql://...`. `BETTER_AUTH_SECRET` is already generated in your `.env`.
+2. Paste it in `.env` as `DATABASE_URL=postgresql://...`, and set `BETTER_AUTH_SECRET` (the command to generate one is in `.env.example`).
 3. Create the tables:
    ```bash
    npm run db:migrate
@@ -208,7 +211,7 @@ Each saved recipe has a `source_key`: `tiktok:<video id>`, `instagram:<shortcode
 
 - A unique index on (user, source_key) means a user can't save the same source twice, even with two saves at the same moment. `POST /recipes` then answers 200 with the existing recipe and `alreadySaved: true` (201 when new).
 - `POST /recipe/stream` checks first: if you're signed in and already saved that link, it answers `{"type":"existing","recipe":{id,title}}` without extracting (nothing paid). TikTok short links (vm.tiktok.com) can't be recognized before extracting, but the save still won't duplicate.
-- Recipes saved before this existed: `npm run db:backfill-keys` (already run on your database).
+- Recipes saved before source keys existed: `npm run db:backfill-keys` (safe to run again).
 
 ### Database commands
 
@@ -222,7 +225,7 @@ TikTok image links expire after about a day, so a saved TikTok recipe's `image` 
 
 ## Cost per request
 
-`/extract`, `/tiktok` and `/video` track what each request spends on paid APIs (Claude, OpenAI speech-to-text, ScrapeCreators):
+Every recipe route (`/recipe`, `/extract`, `/tiktok`, `/instagram`, `/youtube`, `/video`) tracks what each request spends on paid APIs (Claude, OpenAI speech-to-text, ScrapeCreators):
 
 - **Console:** one line per request, e.g.
   `[cost] POST /tiktok 200 $0.0371 in 14.2 s (scrapecreators $0.0019 + claude-opus-5-5 1912 in / 1760 out $0.0352)`
@@ -241,15 +244,10 @@ src/
   config/index.js           port, CORS, timeouts, request headers
   config/pricing.js         API prices used for the cost log
   config/env.js             database + auth settings, checked with zod at startup
-  db/                       Drizzle: client.js (Neon), schema/ (auth tables, recipe table)
+  db/                       Drizzle: client.js (Neon), schema/ (auth, recipes, lists, api_request)
   validators/               zod schemas for request input
-  routes/                   URL → controller
-    index.js                mounts every router
-    extract.routes.js       /extract
-    tiktok.routes.js        /tiktok
-    video.routes.js         /video
-    ingredients.routes.js   /ingredients
-    health.routes.js        /health
+  routes/                   URL → controller, one file per path (recipe, extract, tiktok, instagram, youtube,
+                            video, recipes, lists, admin, me, auth...); index.js mounts them
   controllers/              read the request, call a service, send the response
   middleware/               cors, notFound (404), errorHandler, uploadVideo (multer), trackCost,
                             requireAuth, requireAdmin, validate (zod): *.middleware.js
@@ -282,15 +280,17 @@ src/
       parseIngredient.js        "2 cups milk" → { quantity, unit, name, notes }
       matchUnit.js, toNumber.js
       constants/                units, fractions, number words, regexes
+    progress/               live step reporting for POST /recipe/stream
   utils/                    small shared helpers, one function per file
 drizzle/                    generated SQL migrations (npm run db:generate)
 drizzle.config.js           drizzle-kit settings
+scripts/                    setRole.js (admin:grant / revoke), backfillSourceKeys.js
 tests/                      node:test tests; accountsDatabase.test.js runs real Better Auth on in-memory Postgres
 ```
 
-**Adding an endpoint** (for example Instagram):
-1. Put the logic in `services/tiktok/`.
-2. Add a controller in `controllers/`.
+**Adding an endpoint:**
+1. Put the logic in a folder under `services/`.
+2. Add a controller in `controllers/` (and a zod schema in `validators/` if it takes input).
 3. Add a route file in `routes/` and mount it in `routes/index.js`.
 
 ## Command line

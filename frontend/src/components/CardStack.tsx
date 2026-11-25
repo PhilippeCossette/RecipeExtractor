@@ -14,9 +14,6 @@ export const STACK_COLORS = [
   "bg-doodle-lilac",
 ] as const;
 
-/* ------------------------------------------------------------------
-   SETTINGS: tweak these to change the look and feel
-   ------------------------------------------------------------------ */
 /** A card growing to full page / shrinking back. */
 const GROW: Transition = { type: "spring", visualDuration: 0.45, bounce: 0.1 };
 /** Corner radius (px) of a card in the stack. */
@@ -146,8 +143,7 @@ export function ExpandedCard({
     };
   }, [onBack]);
 
-  // Portal into <body>: fixed full page even inside transformed parents (like the page transition),
-  // and above the nav bar (z-50).
+  // Portal into <body>: full page even inside a transformed parent, and above the nav (z-50)
   return createPortal(
     <motion.section
       layoutId={layoutId}

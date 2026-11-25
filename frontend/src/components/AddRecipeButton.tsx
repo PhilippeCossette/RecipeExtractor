@@ -2,7 +2,6 @@ import { useState } from "react";
 import { cn } from "cn";
 import { AnimatePresence, motion } from "motion/react";
 import { SketchIcon, type SketchGeometry } from "sketchicon";
-// Hand-drawn Hugeicons: named imports from the package root (names from sketchicon.com)
 import {
   PlusSignIcon,
   Link04Icon,
@@ -19,11 +18,11 @@ const ICON_ROUGHNESS = 3;
 const MENU_ITEMS: {
   label: string;
   icon: SketchGeometry;
-  /** A doodle pastel from styles.css (bg-doodle-pink | sky | mint | lemon | lilac). */
+  /** A doodle pastel class from styles.css. */
   color: string;
-  /** Not built yet: shows a "soon" tag. Set to false once the feature exists. */
+  /** Not built yet: shows a "soon" tag. */
   soon?: boolean;
-  /** What tapping it opens. Items without one don't do anything yet. */
+  /** What tapping it opens. */
   opens?: "paste-link";
 }[] = [
   {
@@ -70,9 +69,8 @@ const textVariant = {
 };
 
 /**
- * Round "+" button: opens/closes the menu of ways to add a recipe.
- * "Paste a link" closes the menu and opens the PasteLinkDrawer card; the others aren't built yet.
- * The open state lives in AppNav (it also dims the bar and shows the backdrop), so it's passed in.
+ * Round "+" button and its menu of ways to add a recipe.
+ * The open state lives in AppNav, which also dims the bar and shows the backdrop.
  */
 export function AddRecipeButton({
   open,
@@ -97,8 +95,7 @@ export function AddRecipeButton({
 
       <AnimatePresence>
         {open && (
-          // bottom-full = the menu's BOTTOM is pinned just above the "+", so it grows UP.
-          // w-max: only as wide as its content, so it never makes the page wider.
+          // Pinned above the "+" so it grows up; w-max keeps it from widening the page
           <motion.div
             variants={parentVariant}
             initial="closed"
@@ -119,7 +116,7 @@ export function AddRecipeButton({
                       pair === "even" ? "-translate-x-4" : "translate-x-4"
                     }
                   >
-                    {/* relative: the "soon" tag (absolute) is placed on THIS button's corner */}
+                    {/* relative: anchors the "soon" tag */}
                     <button
                       type="button"
                       onClick={() => choose(opens)}

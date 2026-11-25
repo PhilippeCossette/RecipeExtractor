@@ -1,10 +1,7 @@
 import { boolean, doublePrecision, index, integer, jsonb, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import { user } from "./auth.schema.js";
 
-/**
- * One row per recipe request (/extract, /tiktok, /instagram, /youtube, /video) with what it cost.
- * Written by the trackCost middleware; read by the admin cost pages.
- */
+/** One row per recipe request and what it cost. Written by trackCost, read by the admin pages. */
 export const apiRequest = pgTable(
   "api_request",
   {

@@ -3,3 +3,5 @@ dist/
 .output/
 .tanstack/
 .env
+.env.*
+!.env.example

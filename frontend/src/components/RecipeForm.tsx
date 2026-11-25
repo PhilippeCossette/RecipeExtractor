@@ -16,10 +16,7 @@ const SOURCE_LABELS: Record<RecipeSource, string> = {
   youtube: "YouTube",
 };
 
-/**
- * One box for any link (or pasted share text). No type to pick: the API sends it to the right
- * extractor from its host; the form only shows what it detected. The request runs in the page (TanStack Query).
- */
+/** One box for any link or share text. Shows the detected link type; the API picks the extractor. */
 export function RecipeForm({ onSubmit, pending }: Props) {
   const form = useAppForm({
     defaultValues,
