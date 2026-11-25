@@ -13,7 +13,7 @@ import {
 /** How hand-drawn the icons look: 0 = clean, 1.5 = default, ~3 = very wobbly. */
 const ICON_ROUGHNESS = 3;
 
-/** The choices in the "+" menu. The LAST one ends up closest to the button. */
+/** The choices in the "+" menu. The FIRST one ends up closest to the button (the list is flex-col-reverse). */
 const MENU_ITEMS: {
   label: string;
   icon: SketchGeometry;
@@ -34,18 +34,18 @@ const parentVariant = {
     },
   },
   closed: {
-    transition: { staggerChildren: 0.02, staggerDirection: -1 },
+    transition: { staggerChildren: 0.06, staggerDirection: -1 },
   },
 };
 
 const childVariant = {
   open: { opacity: 1, y: 0, scale: 1 },
-  closed: { opacity: 0, y: 12, scale: 0.95 },
+  closed: { opacity: 0, y: 12, scale: 0.8 },
 };
 
 const textVariant = {
-  open: { opacity: 1, y: 0 },
-  closed: { opacity: 0, y: 12 },
+  open: { opacity: 1 },
+  closed: { opacity: 0 },
 };
 
 /**
